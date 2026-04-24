@@ -1,11 +1,17 @@
 import { create } from 'zustand';
 
+/**
+ * Interface representing the user's demographic context.
+ */
 interface UserContext {
   age: number | null;
   state: string;
   status: 'unregistered' | 'registered' | 'unknown';
 }
 
+/**
+ * Interface representing the application's global state.
+ */
 interface AppState {
   context: UserContext;
   setContext: (context: Partial<UserContext>) => void;

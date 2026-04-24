@@ -1,6 +1,11 @@
+"""
+Gemini AI Service Module.
+Handles configuration and interaction with Google's Generative AI models.
+"""
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
+from typing import Dict, Any
 
 load_dotenv()
 
@@ -8,7 +13,17 @@ load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY", "DUMMY"))
 model = genai.GenerativeModel('gemini-3-flash-preview')
 
-async def generate_election_guidance(query: str, context: dict) -> str:
+async def generate_election_guidance(query: str, context: Dict[str, Any]) -> str:
+    """
+    Generate election guidance based on user query and context using Gemini.
+    
+    Args:
+        query (str): The user's input query.
+        context (Dict[str, Any]): A dictionary containing user context like age, state, and status.
+        
+    Returns:
+        str: The AI-generated guidance string.
+    """
     # Security/Validation pre-check to prevent prompt injection
     if "ignore previous instructions" in query.lower():
         return "I am an Election Assistant. I cannot comply with that request."

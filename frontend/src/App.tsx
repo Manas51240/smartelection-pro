@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useStore } from './store/useStore';
 import { motion } from 'framer-motion';
 import { db } from './firebase';
@@ -10,7 +10,7 @@ function App() {
   const [messages, setMessages] = useState<{ role: string, content: string }[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const handleSend = async () => {
+  const handleSend = useCallback(async () => {
     if (!query.trim()) return;
 
     const userMsg = query;
@@ -47,7 +47,7 @@ function App() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [query, context]);
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col items-center py-10 px-4">

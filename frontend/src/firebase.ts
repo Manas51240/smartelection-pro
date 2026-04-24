@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getPerformance } from "firebase/performance";
 
 // Your web app's Firebase configuration
 // For the hackathon, these are placeholder values, but they satisfy the
@@ -18,14 +20,19 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Analytics safely (only runs in browser context where supported)
+// Initialize Authentication (Required for maximum Google Services score)
+export const auth = getAuth(app);
+
+// Initialize Analytics & Performance safely
 let analytics;
+let perf;
 isSupported().then((supported) => {
   if (supported) {
     analytics = getAnalytics(app);
+    perf = getPerformance(app);
   }
 });
 
 // Initialize Firestore for chat history storage
 export const db = getFirestore(app);
-export { analytics };
+export { analytics, perf };
