@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useStore } from './store/useStore';
 import { motion } from 'framer-motion';
+import { db } from './firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 function App() {
   const { context, setContext } = useStore();
@@ -24,7 +26,22 @@ function App() {
         body: JSON.stringify({ query: userMsg, context })
       });
       const data = await res.json();
-      setMessages(prev => [...prev, { role: 'ai', content: data.response || "No response" }]);
+      const aiResponse = data.response || "No response";
+      
+      setMessages(prev => [...prev, { role: 'ai', content: aiResponse }]);
+
+      // Log interaction to Firebase
+      try {
+        await addDoc(collection(db, 'chat_history'), {
+          user_query: userMsg,
+          ai_response: aiResponse,
+          context: context,
+          timestamp: serverTimestamp()
+        });
+      } catch {
+        console.warn("Firebase logging skipped (expected if using dummy config)");
+      }
+      
     } catch {
       setMessages(prev => [...prev, { role: 'ai', content: "Error connecting to AI Assistant." }]);
     } finally {

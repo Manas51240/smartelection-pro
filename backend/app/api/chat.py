@@ -22,7 +22,7 @@ async def chat_endpoint(request: Request, body: ChatRequest):
     try:
         # In a real app we'd also verify Firebase token here via Depends
         # For hackathon robust testing, we rely on core services mocking
-        answer = await generate_election_guidance(body.query, body.context.dict())
+        answer = await generate_election_guidance(body.query, body.context.model_dump())
         return ChatResponse(response=answer)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
